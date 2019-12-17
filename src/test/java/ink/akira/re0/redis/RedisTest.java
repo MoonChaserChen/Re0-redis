@@ -4,6 +4,7 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 public class RedisTest {
     @Test
@@ -42,6 +43,17 @@ public class RedisTest {
             // 执行增加1操作
             pipelined.set("mykey", String.valueOf(myKey + 1));
             pipelined.exec();
+        }
+    }
+
+    @Test
+    public void testMultiIncr(){
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            jedis.watch("mykey");
+            int myKey = Integer.parseInt(jedis.get("mykey"));
+            Transaction transaction = jedis.multi();
+            transaction.set("mykey", String.valueOf(myKey + 1));
+            transaction.exec();
         }
     }
 }
