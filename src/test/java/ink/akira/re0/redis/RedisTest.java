@@ -3,6 +3,7 @@ package ink.akira.re0.redis;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
 
 public class RedisTest {
     @Test
@@ -25,6 +26,22 @@ public class RedisTest {
             pipelined.sadd("teacher-course", teacherId, courseId);
             pipelined.exec();
             pipelined.sync();
+        }
+    }
+
+    @Test
+    public void testMultiIncrFalse(){
+        try (Jedis jedis = new Jedis("localhost", 6379)) {
+            Pipeline pipelined = jedis.pipelined();
+            // 监控mykey以防止被其它client修改
+            pipelined.watch("mykey");
+            Response<String> myKeyResp = pipelined.get("mykey");
+            int myKey = Integer.parseInt(myKeyResp.get());
+            // 开启事务
+            pipelined.multi();
+            // 执行增加1操作
+            pipelined.set("mykey", String.valueOf(myKey + 1));
+            pipelined.exec();
         }
     }
 }
