@@ -45,6 +45,10 @@
               );
             } else if (lang === "c++") {
               lang = "cpp";
+            } else if (lang === "dot") {
+              return (
+                '<div class="viz">'+ Viz(code, "SVG")+'</div>'
+              );
             }
             return this.origin.code.apply(this, arguments);
           }
@@ -99,6 +103,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
   <!-- mermaid erquirements -->
   <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <!--graphviz-->
+  <script src="//cdn.bootcss.com/viz.js/1.8.0/viz.js"></script>
   <script type="text/javascript">mermaid.initialize({ startOnLoad: false });</script>
 </body>
 </html>
